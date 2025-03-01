@@ -1,0 +1,98 @@
+import random
+
+class StockPortfolio:
+    def __init__(self):
+        # Initialize an empty portfolio
+        self.portfolio = []
+
+    def add_stock(self, stock_symbol, quantity, purchase_price):
+        # Simulate fetching a stock price (mock data)
+        current_price = random.uniform(50, 150)  # Mock current price between $50 and $150
+        stock_data = {
+            "Stock": stock_symbol,
+            "Quantity": quantity,
+            "Purchase Price": purchase_price,
+            "Current Price": current_price,
+            "Value": quantity * current_price
+        }
+        self.portfolio.append(stock_data)
+        print(f"Added {quantity} shares of {stock_symbol} at ${purchase_price} per share.")
+
+    def remove_stock(self, stock_symbol):
+        # Remove stock from the portfolio
+        self.portfolio = [stock for stock in self.portfolio if stock["Stock"] != stock_symbol]
+        print(f"Removed {stock_symbol} from portfolio.")
+
+    def update_stock(self, stock_symbol, new_quantity=None, new_purchase_price=None):
+        # Find stock and update details
+        for stock in self.portfolio:
+            if stock["Stock"] == stock_symbol:
+                if new_quantity:
+                    stock["Quantity"] = new_quantity
+                if new_purchase_price:
+                    stock["Purchase Price"] = new_purchase_price
+
+                # Update current price (mocked)
+                stock["Current Price"] = random.uniform(50, 150)
+                stock["Value"] = stock["Quantity"] * stock["Current Price"]
+                print(f"Updated {stock_symbol}.")
+                return
+        print(f"{stock_symbol} not found in portfolio.")
+
+    def display_portfolio(self):
+        if not self.portfolio:
+            print("No stocks in the portfolio.")
+            return
+
+        # Print portfolio
+        print("\nCurrent Portfolio:")
+        for stock in self.portfolio:
+            print(f"{stock['Stock']} - Quantity: {stock['Quantity']} - Purchase Price: ${stock['Purchase Price']} - "
+                  f"Current Price: ${stock['Current Price']:.2f} - Value: ${stock['Value']:.2f}")
+        
+        total_value = sum(stock["Value"] for stock in self.portfolio)
+        print(f"\nTotal Portfolio Value: ${total_value:.2f}")
+
+    def track_performance(self):
+        # Track and show performance of each stock
+        for stock in self.portfolio:
+            change = (stock["Current Price"] - stock["Purchase Price"]) * stock["Quantity"]
+            print(f"\n{stock['Stock']} Performance:")
+            print(f"Purchased at: ${stock['Purchase Price']} | Current Price: ${stock['Current Price']:.2f}")
+            print(f"Change in value: ${change:.2f}")
+
+def main():
+    portfolio = StockPortfolio()
+
+    while True:
+        print("\n1. Add Stock  2. Remove Stock  3. Update Stock  4. Display Portfolio  5. Track Performance  6. Exit")
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            stock_symbol = input("Enter stock symbol (e.g., AAPL, TSLA): ").upper()
+            quantity = int(input("Enter quantity of shares: "))
+            purchase_price = float(input("Enter purchase price per share: $"))
+            portfolio.add_stock(stock_symbol, quantity, purchase_price)
+        elif choice == "2":
+            stock_symbol = input("Enter stock symbol to remove: ").upper()
+            portfolio.remove_stock(stock_symbol)
+        elif choice == "3":
+            stock_symbol = input("Enter stock symbol to update: ").upper()
+            new_quantity = input("Enter new quantity (or press Enter to skip): ")
+            new_quantity = int(new_quantity) if new_quantity else None
+            new_purchase_price = input("Enter new purchase price (or press Enter to skip): ")
+            new_purchase_price = float(new_purchase_price) if new_purchase_price else None
+            portfolio.update_stock(stock_symbol, new_quantity, new_purchase_price)
+        elif choice == "4":
+            portfolio.display_portfolio()
+        elif choice == "5":
+            portfolio.track_performance()
+        elif choice == "6":
+            print("Exiting portfolio tracker.")
+            break
+        else:
+            print("Invalid choice, please try again.")
+
+# Fix the typo here: use __name__ instead of _name_
+if __name__ == "__main__":
+    main()
